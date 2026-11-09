@@ -41,7 +41,7 @@ app.innerHTML = `
   <article class="dish" data-i="${i}">
     <div class="stage">
       <model-viewer src="models/${p.id}.glb" alt="${p.nome} em 3D"
-        ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor"
+        ar ar-modes="scene-viewer webxr quick-look" ar-scale="fixed" ar-placement="floor"
         camera-controls touch-action="pan-y" auto-rotate auto-rotate-delay="0" rotation-per-second="20deg"
         camera-orbit="30deg 62deg auto" shadow-intensity="1" shadow-softness="0.8"
         environment-image="neutral" exposure="1.05" interaction-prompt="none" ${i > 0 ? 'loading="lazy"' : 'loading="eager"'}>
@@ -83,10 +83,16 @@ document.querySelectorAll('.dish').forEach(card => {
   // Começa no tamanho marcado
   const sel = card.querySelector('.sizes [aria-pressed="true"]'); if (sel) sel.click();
 
-  card.querySelector('.btn-ar').addEventListener('click', async () => {
-    if (!mv.loaded) await new Promise(r => mv.addEventListener('load', r, { once: true }));
+  const arBtn = card.querySelector('.btn-ar');
+  const arLabel = arBtn.innerHTML;
+  const openAR = () => {
     if (mv.canActivateAR) mv.activateAR();
     else document.getElementById('desk').showModal();
+  };
+  arBtn.addEventListener('click', () => {
+    if (mv.loaded) return openAR(); // abre na hora, ainda dentro do toque do usuário
+    arBtn.innerHTML = 'Carregando o prato…';
+    mv.addEventListener('load', () => { arBtn.innerHTML = arLabel; openAR(); }, { once: true });
   });
   mv.addEventListener('ar-status', e => {
     if (e.detail.status === 'failed') document.getElementById('desk').showModal();
