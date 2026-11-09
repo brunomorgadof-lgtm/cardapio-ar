@@ -46,7 +46,7 @@ app.innerHTML = `
     <h1>${R.nome}</h1>
     <p>${R.slogan}</p>
     <div class="hint">${arIcon.replace('<svg', '<svg width="22" height="22" style="flex:none;color:var(--accent)"')}
-      <span>Arraste para girar o prato. Toque em <b>Ver na mesa</b> para ver em tamanho real na sua frente.</span></div>
+      <span>Arraste para girar o prato. Toque em <b>Ver na mesa</b> para ver o prato pela câmera, na sua frente.</span></div>
   </header>
   ${R.pratos.map((p, i) => `
   <article class="dish" data-i="${i}">
@@ -69,6 +69,7 @@ app.innerHTML = `
         `<button type="button" data-j="${j}" aria-pressed="${t.preco === p.preco}">${t.rotulo}</button>`).join('')}</div>` : ''}
       <div class="actions">
         <button class="btn btn-ar" type="button">${arIcon} Ver na mesa</button>
+        <button class="btn btn-ghost btn-real" type="button" hidden>Tamanho real</button>
         ${WHATSAPP ? `<a class="btn btn-ghost wa" aria-label="Pedir pelo WhatsApp" target="_blank" rel="noopener">${waIcon}</a>` : ''}
       </div>
     </div>
@@ -95,18 +96,16 @@ document.querySelectorAll('.dish').forEach(card => {
   const sel = card.querySelector('.sizes [aria-pressed="true"]'); if (sel) sel.click();
 
   const arBtn = card.querySelector('.btn-ar');
-  const arLabel = arBtn.innerHTML;
-  const openAR = () => {
-    pendingCard = { mv, nome: label };
-    if (mv.canActivateAR && !FORCE_CAM) mv.activateAR();
-    else if (isMobile) openCam();
-    else document.getElementById('desk').showModal();
-  };
+  // Botão principal: modo câmera na própria página (funciona em qualquer navegador)
   arBtn.addEventListener('click', () => {
-    if (mv.loaded) return openAR(); // abre na hora, ainda dentro do toque do usuário
-    arBtn.innerHTML = 'Carregando o prato…';
-    mv.addEventListener('load', () => { arBtn.innerHTML = arLabel; openAR(); }, { once: true });
+    pendingCard = { mv, nome: label };
+    if (isMobile) openCam(); else document.getElementById('desk').showModal();
   });
+  // Botão secundário: AR nativa do Google/Apple, prato preso na mesa em tamanho real
+  const realBtn = card.querySelector('.btn-real');
+  const showReal = () => { if (isMobile && mv.canActivateAR) realBtn.hidden = false; };
+  mv.loaded ? showReal() : mv.addEventListener('load', showReal, { once: true });
+  realBtn.addEventListener('click', () => { pendingCard = { mv, nome: label }; mv.activateAR(); });
   mv.addEventListener('ar-status', e => {
     if (e.detail.status === 'failed') isMobile ? openCam() : document.getElementById('desk').showModal();
   });
