@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cardápio</title>
+<meta name="theme-color" content="#faf7f2">
+<link rel="stylesheet" href="style.css">
+<script type="module" src="vendor/model-viewer.min.js"></script>
+<script src="data.js"></script>
+</head>
+<body>
+<main class="wrap" id="app"></main>
+<dialog id="desk">
+  <h3 style="margin:0 0 8px">Abra no celular</h3>
+  <p style="margin:0 0 14px;color:var(--muted)">A realidade aumentada funciona no celular. Aponte a câmera para o QR code.</p>
+  <img id="deskqr" alt="QR code desta página">
+  <p><button class="btn btn-ghost" onclick="this.closest('dialog').close()">Fechar</button></p>
+</dialog>
+<script>
+const brl = v => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+const key = new URLSearchParams(location.search).get('r') || 'hamburgueria';
+const R = RESTAURANTES[key] || RESTAURANTES.hamburgueria;
+document.title = `${R.nome} · Cardápio`;
+document.documentElement.style.setProperty('--accent', R.cor);
+document.getElementById('deskqr').src = `qr/${key in RESTAURANTES ? key : 'hamburgueria'}.svg`;
+
+const arIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 3 7v10l9 5 9-5V7z"/><path d="m3 7 9 5 9-5M12 12v10"/></svg>';
+const waIcon = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1.1-1.5-1.1-2.9s.7-2 1-2.3c.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.3 0 .5l-.3.5-.4.4c-.1.1-.3.3-.1.6.2.3.7 1.2 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.4.1.6-.1l.8-1c.2-.3.4-.2.6-.1l2 1c.3.1.5.2.5.3.1.1.1.7-.1 1.3z"/></svg>';
+
+const app = document.getElementById('app');
+app.innerHTML = `
+  <header class="hero">
+    <span class="tag">${R.emoji} ${R.culinaria}</span>
+    <h1>${R.nome}</h1>
+    <p>${R.slogan}</p>
+    <div class="hint">${arIcon.replace('<svg', '<svg width="22" height="22" style="flex:none;color:var(--accent)"')}
+      <span>Arraste para girar o prato. Toque em <b>Ver na mesa</b> para ver em tamanho real na sua frente.</span></div>
+  </header>
+  ${R.pratos.map((p, i) => `
+  <article class="dish" data-i="${i}">
+    <div class="stage">
+      <model-viewer src="models/${p.id}.glb" alt="${p.nome} em 3D"
+        ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor"
+        camera-controls touch-action="pan-y" auto-rotate auto-rotate-delay="0" rotation-per-second="20deg"
+        camera-orbit="30deg 62deg auto" shadow-intensity="1" shadow-softness="0.8"
+        environment-image="neutral" exposure="1.05" interaction-prompt="none" ${i > 0 ? 'loading="lazy"' : 'loading="eager"'}>
+        <button slot="ar-button" hidden></button>
+      </model-viewer>
+      ${p.destaque ? '<span class="badge">Mais pedido</span>' : ''}
+      <span class="rot">↻ arraste para girar</span>
+    </div>
+    <div class="body">
+      <div class="row"><h2>${p.nome}</h2><span class="price">${brl(p.preco)}</span></div>
+      <p class="desc">${p.desc}</p>
+      ${p.tamanhos ? `<div class="sizes" role="group" aria-label="Tamanho">${p.tamanhos.map((t, j) =>
+        `<button type="button" data-j="${j}" aria-pressed="${t.preco === p.preco}">${t.rotulo}</button>`).join('')}</div>` : ''}
+      <div class="actions">
+        <button class="btn btn-ar" type="button">${arIcon} Ver na mesa</button>
+        ${WHATSAPP ? `<a class="btn btn-ghost wa" aria-label="Pedir pelo WhatsApp" target="_blank" rel="noopener">${waIcon}</a>` : ''}
+      </div>
+    </div>
+  </article>`).join('')}
+  <footer>Protótipo de cardápio em realidade aumentada · modelos 3D ilustrativos</footer>`;
+
+document.querySelectorAll('.dish').forEach(card => {
+  const p = R.pratos[card.dataset.i];
+  const mv = card.querySelector('model-viewer');
+  const priceEl = card.querySelector('.price');
+  const wa = card.querySelector('.wa');
+  let label = p.nome, price = p.preco;
+  const setWa = () => wa && (wa.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Olá! Quero pedir: ${label} (${brl(price)})`)}`);
+  setWa();
+
+  card.querySelectorAll('.sizes button').forEach(b => b.addEventListener('click', () => {
+    const t = p.tamanhos[b.dataset.j];
+    card.querySelectorAll('.sizes button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    mv.scale = `${t.escala} ${t.escala} ${t.escala}`;
+    price = t.preco; label = `${p.nome} ${t.rotulo}`;
+    priceEl.textContent = brl(price); setWa();
+  }));
+  // Começa no tamanho marcado
+  const sel = card.querySelector('.sizes [aria-pressed="true"]'); if (sel) sel.click();
+
+  card.querySelector('.btn-ar').addEventListener('click', async () => {
+    if (!mv.loaded) await new Promise(r => mv.addEventListener('load', r, { once: true }));
+    if (mv.canActivateAR) mv.activateAR();
+    else document.getElementById('desk').showModal();
+  });
+  mv.addEventListener('ar-status', e => {
+    if (e.detail.status === 'failed') document.getElementById('desk').showModal();
+  });
+});
+</script>
+</body>
+</html>

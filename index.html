@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cardápio AR · Demonstração</title>
+<link rel="stylesheet" href="style.css">
+<script type="module" src="vendor/model-viewer.min.js"></script>
+<script src="data.js"></script>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <span class="tag">Demonstração</span>
+    <h1>Cardápio em realidade aumentada</h1>
+    <p>O cliente escaneia o QR code da mesa e vê o prato em 3D, em tamanho real, antes de pedir. Sem baixar aplicativo.</p>
+  </header>
+  <div class="grid" id="grid"></div>
+  <footer>Escolha uma culinária para abrir o cardápio de exemplo. “Plaquinha” abre o QR code para imprimir e colocar na mesa.</footer>
+</main>
+<script>
+const g = document.getElementById('grid');
+for (const [k, R] of Object.entries(RESTAURANTES)) {
+  const p = R.pratos.find(x => x.destaque) || R.pratos[0];
+  g.insertAdjacentHTML('beforeend', `
+  <div class="card" style="--c:${R.cor}">
+    <a href="menu.html?r=${k}" style="text-decoration:none">
+      <model-viewer src="models/${p.id}.glb" auto-rotate rotation-per-second="25deg" camera-orbit="30deg 62deg auto"
+        shadow-intensity="1" environment-image="neutral" interaction-prompt="none" style="background:var(--stage)"></model-viewer>
+      <div class="body">
+        <span class="tag">${R.emoji} ${R.culinaria}</span>
+        <h2>${R.nome}</h2>
+        <p>${R.slogan}</p>
+      </div>
+    </a>
+    <div class="body links" style="padding-top:0;border:0"><a href="menu.html?r=${k}" style="color:var(--c)">Abrir cardápio</a><a href="mesa.html?r=${k}">Plaquinha</a></div>
+  </div>`);
+}
+</script>
+</body>
+</html>

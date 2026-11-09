@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plaquinha de mesa</title>
+<script src="data.js"></script>
+<style>
+  body { margin: 0; background: #e9e5df; font: 16px/1.4 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: #1d1a16; }
+  .tent { width: min(100% - 32px, 10cm); margin: 24px auto; background: #fff; border-radius: 16px; padding: 28px 24px;
+    text-align: center; box-shadow: 0 8px 30px rgba(0,0,0,.12); border-top: 8px solid var(--c); }
+  .tent small { text-transform: uppercase; letter-spacing: .08em; font-weight: 700; color: var(--c); font-size: 12px; }
+  .tent h1 { margin: 4px 0 16px; font-size: 26px; }
+  .tent img { width: 100%; max-width: 6cm; display: block; margin: 0 auto; }
+  .tent h2 { margin: 16px 0 4px; font-size: 20px; }
+  .tent p { margin: 0; color: #6b645b; font-size: 14px; }
+  .print { display: block; margin: 0 auto 24px; font: inherit; font-weight: 600; padding: 12px 20px; border-radius: 12px; border: 0; background: #1d1a16; color: #fff; cursor: pointer; }
+  @media print { body { background: #fff; } .print { display: none; } .tent { box-shadow: none; border: 1px solid #ddd; } }
+</style>
+</head>
+<body>
+<div class="tent" id="t"></div>
+<button class="print" onclick="print()">Imprimir</button>
+<script>
+const k = new URLSearchParams(location.search).get('r');
+const key = k in RESTAURANTES ? k : 'hamburgueria', R = RESTAURANTES[key];
+document.body.style.setProperty('--c', R.cor);
+document.getElementById('t').innerHTML = `<small>${R.emoji} ${R.culinaria}</small><h1>${R.nome}</h1>
+  <img src="qr/${key}.svg" alt="QR code do cardápio"><h2>Veja o prato na sua mesa</h2>
+  <p>Aponte a câmera do celular para o QR code e veja cada prato em 3D, em tamanho real.</p>`;
+</script>
+</body>
+</html>
