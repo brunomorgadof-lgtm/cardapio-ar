@@ -24,15 +24,15 @@ window.RESTAURANTES = {
     cor: '#c8481c',
     emoji: '🍕',
     pratos: [
-      { id: 'pizza-margherita', nome: 'Pizza Margherita', preco: 49.9,
-        desc: 'Molho de tomate italiano, muçarela, tomate e manjericão.', destaque: true,
+      { id: 'pizza-parma', nome: 'Pizza Parma com rúcula', preco: 54.9,
+        desc: 'Molho de tomate italiano, muçarela, presunto parma e rúcula fresca.', destaque: true,
+        credito: { titulo: 'Pizza', autor: 'Rigsters', link: 'https://skfb.ly/6RqYo', licenca: 'CC BY 4.0' },
         tamanhos: [
-          { rotulo: 'Broto 25 cm', escala: 25 / 35, preco: 39.9 },
-          { rotulo: 'Média 30 cm', escala: 30 / 35, preco: 49.9 },
-          { rotulo: 'Grande 35 cm', escala: 1, preco: 59.9 },
+          { rotulo: 'Broto 25 cm', escala: 25 / 35, preco: 44.9 },
+          { rotulo: 'Média 30 cm', escala: 30 / 35, preco: 54.9 },
+          { rotulo: 'Grande 35 cm', escala: 1, preco: 64.9 },
         ] },
-      { id: 'pizza-refri', nome: 'Pizza grande + refri', preco: 64.9,
-        desc: 'Margherita grande e um refrigerante de 500 ml.' },
+
     ],
   },
   lanchonete: {
