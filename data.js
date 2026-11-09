@@ -9,12 +9,9 @@ window.RESTAURANTES = {
     cor: '#d6455d',
     emoji: '🍣',
     pratos: [
-      { id: 'combinado-8', nome: 'Combinado 8 peças', preco: 59.9,
-        desc: '3 niguiris (salmão e tamago) e 5 uramakis variados, servidos no prato.', destaque: true },
-      { id: 'niguiri-salmao', nome: 'Niguiri de salmão (2 un.)', preco: 18.9,
-        desc: 'Bolinho de arroz temperado coberto com fatia de salmão.' },
-      { id: 'uramaki', nome: 'Trio de uramaki', preco: 24.9,
-        desc: 'Salmão, ovas e vegetariano. Uma peça de cada.' },
+      { id: 'combinado-uramaki', nome: 'Combinado de uramakis', preco: 79.9,
+        desc: 'Seleção de uramakis variados com gengibre e wasabi, servidos na tábua de bambu.', destaque: true,
+        credito: { titulo: 'Sushi', autor: '3DSCANPRO', link: 'https://skfb.ly/oKys6', licenca: 'CC BY 4.0' } },
     ],
   },
   pizzaria: {
