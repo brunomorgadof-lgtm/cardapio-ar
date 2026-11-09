@@ -68,3 +68,16 @@ footer { color: var(--muted); font-size: 13px; padding: 24px 0 40px; text-align:
 dialog { border: 0; border-radius: 20px; padding: 24px; max-width: 340px; background: var(--surface); color: var(--text); text-align: center; }
 dialog::backdrop { background: rgba(0,0,0,.5); }
 dialog img { width: 220px; height: 220px; background: #fff; padding: 10px; border-radius: 12px; }
+
+/* Modo câmera */
+#cam { position: fixed; inset: 0; z-index: 50; background: #000; }
+#cam[hidden] { display: none; }
+#cam video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+#cam.nocam { background: radial-gradient(circle at 50% 60%, #3a332b, #0f0d0b); }
+#cam model-viewer { position: absolute; inset: 18% 0 0 0; width: 100%; height: 82%; background: transparent; --poster-color: transparent; }
+.camtop { position: absolute; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center;
+  padding: max(12px, env(safe-area-inset-top)) 16px 12px; color: #fff; font-weight: 600;
+  background: linear-gradient(rgba(0,0,0,.55), transparent); }
+.camtop button { width: 44px; height: 44px; border-radius: 999px; border: 0; background: rgba(0,0,0,.45); color: #fff; font-size: 20px; cursor: pointer; }
+.camhint { position: absolute; left: 16px; right: 16px; bottom: max(20px, env(safe-area-inset-bottom)); margin: 0; text-align: center;
+  color: #fff; font-size: 14px; padding: 10px 14px; border-radius: 12px; background: rgba(0,0,0,.45); }

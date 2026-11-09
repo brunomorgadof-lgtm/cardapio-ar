@@ -11,6 +11,17 @@
 </head>
 <body>
 <main class="wrap" id="app"></main>
+<div id="cam" hidden>
+  <video id="camvideo" playsinline muted autoplay></video>
+  <model-viewer id="cammv" camera-controls touch-action="none" interaction-prompt="none"
+    camera-orbit="0deg 68deg auto" max-camera-orbit="auto auto 10m" field-of-view="45deg" shadow-intensity="1.2" shadow-softness="0.6"
+    environment-image="neutral" exposure="1.05" disable-pan></model-viewer>
+  <div class="camtop">
+    <span id="camname"></span>
+    <button type="button" id="camclose" aria-label="Fechar">✕</button>
+  </div>
+  <p class="camhint" id="camhint">Aponte para a mesa. Arraste para girar e use dois dedos para aproximar.</p>
+</div>
 <dialog id="desk">
   <h3 style="margin:0 0 8px">Abra no celular</h3>
   <p style="margin:0 0 14px;color:var(--muted)">A realidade aumentada funciona no celular. Aponte a câmera para o QR code.</p>
@@ -86,7 +97,9 @@ document.querySelectorAll('.dish').forEach(card => {
   const arBtn = card.querySelector('.btn-ar');
   const arLabel = arBtn.innerHTML;
   const openAR = () => {
-    if (mv.canActivateAR) mv.activateAR();
+    pendingCard = { mv, nome: label };
+    if (mv.canActivateAR && !FORCE_CAM) mv.activateAR();
+    else if (isMobile) openCam();
     else document.getElementById('desk').showModal();
   };
   arBtn.addEventListener('click', () => {
@@ -95,9 +108,46 @@ document.querySelectorAll('.dish').forEach(card => {
     mv.addEventListener('load', () => { arBtn.innerHTML = arLabel; openAR(); }, { once: true });
   });
   mv.addEventListener('ar-status', e => {
-    if (e.detail.status === 'failed') document.getElementById('desk').showModal();
+    if (e.detail.status === 'failed') isMobile ? openCam() : document.getElementById('desk').showModal();
   });
 });
+
+// ---------- Modo câmera (plano B que funciona em qualquer navegador) ----------
+// Se a AR nativa (Google Scene Viewer / WebXR / Quick Look) não abrir, mostramos
+// a câmera traseira dentro da página com o prato 3D por cima.
+var pendingCard = null;
+const FORCE_CAM = new URLSearchParams(location.search).has('camera');
+const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+const cam = document.getElementById('cam'), video = document.getElementById('camvideo'), cammv = document.getElementById('cammv');
+let stream = null;
+async function openCam() {
+  if (!pendingCard || !cam.hidden) return;
+  const src = pendingCard.mv;
+  cammv.addEventListener('load', () => {
+    // Afasta a câmera para o prato ocupar uns 60% da largura, como se estivesse na mesa
+    const o = cammv.getCameraOrbit();
+    cammv.cameraOrbit = `0deg 68deg ${o.radius * 1.7}m`;
+    cammv.jumpCameraToGoal();
+  }, { once: true });
+  cammv.src = src.src; cammv.scale = src.scale || '1 1 1';
+  document.getElementById('camname').textContent = pendingCard.nome;
+  cam.hidden = false; document.body.style.overflow = 'hidden';
+  try {
+    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
+    video.srcObject = stream; await video.play().catch(() => {});
+  } catch (err) {
+    document.getElementById('camhint').textContent = 'Sem acesso à câmera. Você ainda pode girar o prato e aproximar com os dedos.';
+    cam.classList.add('nocam');
+  }
+}
+function closeCam() {
+  cam.hidden = true; document.body.style.overflow = '';
+  if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+  cam.classList.remove('nocam');
+}
+document.getElementById('camclose').addEventListener('click', closeCam);
+// O Scene Viewer volta para a página com este hash quando não consegue abrir.
+addEventListener('hashchange', () => { if (location.hash === '#model-viewer-no-ar-fallback') setTimeout(openCam, 50); });
 </script>
 </body>
 </html>
