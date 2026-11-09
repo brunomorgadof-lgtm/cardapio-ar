@@ -53,6 +53,7 @@ app.innerHTML = `
     <div class="body">
       <div class="row"><h2>${p.nome}</h2><span class="price">${brl(p.preco)}</span></div>
       <p class="desc">${p.desc}</p>
+      ${p.credito ? `<p class="credit">Modelo 3D: <a href="${p.credito.link}" target="_blank" rel="noopener">${p.credito.titulo}</a> por ${p.credito.autor} · ${p.credito.licenca}</p>` : ''}
       ${p.tamanhos ? `<div class="sizes" role="group" aria-label="Tamanho">${p.tamanhos.map((t, j) =>
         `<button type="button" data-j="${j}" aria-pressed="${t.preco === p.preco}">${t.rotulo}</button>`).join('')}</div>` : ''}
       <div class="actions">
@@ -61,7 +62,7 @@ app.innerHTML = `
       </div>
     </div>
   </article>`).join('')}
-  <footer>Protótipo de cardápio em realidade aumentada · modelos 3D ilustrativos</footer>`;
+  <footer>Protótipo de cardápio em realidade aumentada</footer>`;
 
 document.querySelectorAll('.dish').forEach(card => {
   const p = R.pratos[card.dataset.i];

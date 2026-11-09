@@ -60,9 +60,10 @@ window.RESTAURANTES = {
     emoji: '🍔',
     pratos: [
       { id: 'hamburguer-classico', nome: 'Clássico da Brasa', preco: 29.9,
-        desc: 'Pão brioche, blend 180 g, cheddar, alface e tomate.', destaque: true },
-      { id: 'combo-burger', nome: 'Combo Brasa', preco: 42.9,
-        desc: 'Clássico da Brasa, batata frita e refrigerante.' },
+        desc: 'Pão com gergelim, blend 180 g na brasa, queijo, picles, cebola e maionese da casa.', destaque: true,
+        credito: { titulo: "Burger King's Avocado Whopper", autor: 'seirogan', link: 'https://skfb.ly/opTUv', licenca: 'CC BY 4.0' } },
+      // Combo volta quando tivermos um modelo realista:
+      // { id: 'combo-burger', nome: 'Combo Brasa', preco: 42.9, desc: 'Clássico da Brasa, batata frita e refrigerante.' },
     ],
   },
 };

@@ -19,3 +19,6 @@ Protótipo de cardápio digital: o cliente escaneia o QR code da mesa e vê o pr
 ## Tecnologia
 - [`<model-viewer>`](https://modelviewer.dev) do Google (WebXR / Scene Viewer no Android, Quick Look no iPhone)
 - Modelos 3D ilustrativos do [Food Kit da Kenney](https://kenney.nl/assets/food-kit) (licença CC0, domínio público). Serão substituídos por modelos fotorrealistas de pratos reais na etapa 3.
+
+## Créditos dos modelos 3D
+- "Burger King's Avocado Whopper" (https://skfb.ly/opTUv) por seirogan, licença Creative Commons Attribution 4.0. Recortado e redimensionado para tamanho real (`tools/crop.mjs`).
