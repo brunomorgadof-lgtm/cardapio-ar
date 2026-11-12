@@ -24,3 +24,5 @@ Protótipo de cardápio digital: o cliente escaneia o QR code da mesa e vê o pr
 - "Burger King's Avocado Whopper" (https://skfb.ly/opTUv) por seirogan, licença Creative Commons Attribution 4.0. Recortado e redimensionado para tamanho real (`tools/crop.mjs`).
 - "Pizza" (https://skfb.ly/6RqYo) por Rigsters, licença Creative Commons Attribution 4.0. Redimensionado para tamanho real (`tools/normalize.mjs`).
 - "Sushi" (https://skfb.ly/oKys6) por 3DSCANPRO, licença Creative Commons Attribution 4.0. Redimensionado para tamanho real (`tools/normalize.mjs`).
+- "French Fries" (https://skfb.ly/p7EYP) por lukealfonso, CC BY 4.0. Nivelado, recortado e em tamanho real (`tools/level.mjs`, `tools/crop.mjs`).
+- "Pepperoni Pizza" (https://skfb.ly/pzr8n) por ScanTasticWorld, CC BY 4.0. Em tamanho real (`tools/normalize.mjs`).
