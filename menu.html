@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cardápio</title>
 <meta name="theme-color" content="#faf7f2">
-<link rel="stylesheet" href="style.css?v=1794445455">
+<link rel="stylesheet" href="style.css?v=1794446828">
 <script type="module" src="vendor/model-viewer.min.js"></script>
-<script src="data.js?v=1794445455"></script>
+<script src="data.js?v=1794446828"></script>
 </head>
 <body>
 <main class="wrap" id="app"></main>
@@ -46,7 +46,7 @@ app.innerHTML = `
     <h1>${R.nome}</h1>
     <p>${R.slogan}</p>
     <div class="hint">${arIcon.replace('<svg', '<svg width="22" height="22" style="flex:none;color:var(--accent)"')}
-      <span>Arraste para girar o prato. Toque em <b>Ver na mesa</b> para ver o prato pela câmera, na sua frente.</span></div>
+      <span>Arraste para girar o prato. Toque em <b>Ver na mesa</b> e aponte o celular para a mesa: o prato aparece em tamanho real e você pode andar em volta.</span></div>
   </header>
   ${R.pratos.map((p, i) => `
   <article class="dish" data-i="${i}">
@@ -69,7 +69,6 @@ app.innerHTML = `
         `<button type="button" data-j="${j}" aria-pressed="${t.preco === p.preco}">${t.rotulo}</button>`).join('')}</div>` : ''}
       <div class="actions">
         <button class="btn btn-ar" type="button">${arIcon} Ver na mesa</button>
-        <button class="btn btn-ghost btn-real" type="button" hidden>Tamanho real</button>
         ${WHATSAPP ? `<a class="btn btn-ghost wa" aria-label="Pedir pelo WhatsApp" target="_blank" rel="noopener">${waIcon}</a>` : ''}
       </div>
     </div>
@@ -96,16 +95,20 @@ document.querySelectorAll('.dish').forEach(card => {
   const sel = card.querySelector('.sizes [aria-pressed="true"]'); if (sel) sel.click();
 
   const arBtn = card.querySelector('.btn-ar');
-  // Botão principal: modo câmera na própria página (funciona em qualquer navegador)
-  arBtn.addEventListener('click', () => {
+  const arLabel = arBtn.innerHTML;
+  // Um botão só, igual aos apps de referência: abre a AR nativa do celular
+  // (Quick Look no iPhone, Scene Viewer/WebXR no Android). O prato fica parado na mesa.
+  const openAR = () => {
     pendingCard = { mv, nome: label };
-    if (isMobile) openCam(); else document.getElementById('desk').showModal();
+    if (!isMobile) return document.getElementById('desk').showModal();
+    if (mv.canActivateAR) mv.activateAR();
+    else openCam(); // último recurso: celular sem AR nativa
+  };
+  arBtn.addEventListener('click', () => {
+    if (mv.loaded) return openAR();
+    arBtn.innerHTML = 'Carregando o prato…';
+    mv.addEventListener('load', () => { arBtn.innerHTML = arLabel; openAR(); }, { once: true });
   });
-  // Botão secundário: AR nativa do Google/Apple, prato preso na mesa em tamanho real
-  const realBtn = card.querySelector('.btn-real');
-  const showReal = () => { if (isMobile && mv.canActivateAR) realBtn.hidden = false; };
-  mv.loaded ? showReal() : mv.addEventListener('load', showReal, { once: true });
-  realBtn.addEventListener('click', () => { pendingCard = { mv, nome: label }; mv.activateAR(); });
   mv.addEventListener('ar-status', e => {
     if (e.detail.status === 'failed') isMobile ? openCam() : document.getElementById('desk').showModal();
   });
