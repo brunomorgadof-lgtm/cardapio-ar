@@ -12,6 +12,9 @@ window.RESTAURANTES = {
       { id: 'combinado-uramaki', nome: 'Combinado de uramakis', preco: 79.9,
         desc: 'Seleção de uramakis variados com gengibre e wasabi, servidos na tábua de bambu.', destaque: true,
         credito: { titulo: 'Sushi', autor: '3DSCANPRO', link: 'https://skfb.ly/oKys6', licenca: 'CC BY 4.0' } },
+      { id: 'niguiri-salmao', nome: 'Niguiri de salmão (4 un.)', preco: 29.9,
+        desc: 'Bolinhos de arroz temperado com fatias de salmão fresco, servidos com shoyu.',
+        credito: { titulo: 'Salmon Nigiri', autor: 'Adam.White', link: 'https://skfb.ly/orQrK', licenca: 'CC BY 4.0' } },
     ],
   },
   pizzaria: {

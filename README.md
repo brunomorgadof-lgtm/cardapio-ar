@@ -26,3 +26,4 @@ Protótipo de cardápio digital: o cliente escaneia o QR code da mesa e vê o pr
 - "Sushi" (https://skfb.ly/oKys6) por 3DSCANPRO, licença Creative Commons Attribution 4.0. Redimensionado para tamanho real (`tools/normalize.mjs`).
 - "French Fries" (https://skfb.ly/p7EYP) por lukealfonso, CC BY 4.0. Nivelado, recortado e em tamanho real (`tools/level.mjs`, `tools/crop.mjs`).
 - "Pepperoni Pizza" (https://skfb.ly/pzr8n) por ScanTasticWorld, CC BY 4.0. Em tamanho real (`tools/normalize.mjs`).
+- "Salmon Nigiri" (https://skfb.ly/orQrK) por Adam.White, CC BY 4.0. Em tamanho real (`tools/normalize.mjs`).
