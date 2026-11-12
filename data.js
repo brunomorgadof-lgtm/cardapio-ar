@@ -15,6 +15,9 @@ window.RESTAURANTES = {
       { id: 'niguiri-salmao', nome: 'Niguiri de salmão (4 un.)', preco: 29.9,
         desc: 'Bolinhos de arroz temperado com fatias de salmão fresco, servidos com shoyu.',
         credito: { titulo: 'Salmon Nigiri', autor: 'Adam.White', link: 'https://skfb.ly/orQrK', licenca: 'CC BY 4.0' } },
+      { id: 'niguiri-toro', nome: 'Niguiri de toro (2 un.)', preco: 34.9,
+        desc: 'Barriga de atum (toro) sobre arroz temperado, finalizada com cebolinha.',
+        credito: { titulo: 'Toro sushi', autor: 'Nestaeric', link: 'https://skfb.ly/6TqNx', licenca: 'CC BY 4.0' } },
     ],
   },
   pizzaria: {
@@ -50,14 +53,9 @@ window.RESTAURANTES = {
     cor: '#2f8f5b',
     emoji: '🥪',
     pratos: [
-      { id: 'baguete', nome: 'Baguete completa', preco: 22.9,
-        desc: 'Pão francês longo, presunto, queijo, alface e tomate.', destaque: true },
-      { id: 'hot-dog', nome: 'Cachorro-quente', preco: 14.9,
-        desc: 'Salsicha, molho da casa, mostarda e ketchup.' },
-      { id: 'sanduiche-natural', nome: 'Sanduíche natural', preco: 16.9,
-        desc: 'Pão de forma, frango, cenoura, alface e requeijão.' },
-      { id: 'taco', nome: 'Taco de carne', preco: 19.9,
-        desc: 'Tortilha crocante, carne temperada, alface e queijo.' },
+      { id: 'sanduiche-frango', nome: 'Sanduíche de frango crocante', preco: 32.9,
+        desc: 'Frango empanado, alface, tomate e picles no pão macio, acompanhado de batatas rústicas.', destaque: true,
+        credito: { titulo: 'Chicken Sandwich', autor: 'Spenser C Dickerson', link: 'https://skfb.ly/6CV6X', licenca: 'CC BY 4.0' } },
     ],
   },
   hamburgueria: {
