@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Teste de AR</title>
+<script type="module" src="vendor/model-viewer.min.js"></script>
+<style>
+  body { margin: 0; padding: 16px; font: 16px/1.45 system-ui, sans-serif; background: #faf7f2; color: #1d1a16; }
+  h1 { font-size: 22px; margin: 0 0 4px; } p { margin: 0 0 12px; color: #6b645b; }
+  .box { background: #fff; border: 1px solid #e8e1d6; border-radius: 14px; padding: 14px; margin: 12px 0; }
+  .ok { color: #1a7f37; font-weight: 700; } .no { color: #c8481c; font-weight: 700; }
+  button { width: 100%; min-height: 52px; border: 0; border-radius: 14px; background: #c8481c; color: #fff; font: inherit; font-weight: 700; margin: 6px 0; }
+  model-viewer { width: 100%; height: 200px; background: #f1ece4; border-radius: 12px; }
+  #log { font: 13px/1.4 ui-monospace, monospace; white-space: pre-wrap; color: #333; }
+</style>
+</head>
+<body>
+<h1>Teste de AR do celular</h1>
+<p>Toque nos dois botões, um de cada vez, e grave a tela. Depois me mande o vídeo ou um print desta página.</p>
+<div class="box" id="info">Verificando o celular…</div>
+<model-viewer id="mv" src="models/pizza-parma.glb" ar ar-scale="fixed" ar-placement="floor" camera-controls auto-rotate environment-image="neutral">
+  <button slot="ar-button" hidden></button>
+</model-viewer>
+<button id="t1">Teste 1: AR pelo navegador</button>
+<button id="t2">Teste 2: AR pelo app Google</button>
+<div class="box"><b>Resultado</b><div id="log"></div></div>
+<script type="module">
+const mv = document.getElementById('mv'), log = m => document.getElementById('log').textContent += m + '\n';
+const yes = b => b ? '<span class="ok">sim</span>' : '<span class="no">não</span>';
+let xr = false;
+try { xr = !!(navigator.xr && await navigator.xr.isSessionSupported('immersive-ar')); } catch (e) {}
+const ua = navigator.userAgent, sam = ua.match(/SamsungBrowser\/([\d.]+)/), chr = ua.match(/Chrome\/([\d.]+)/);
+document.getElementById('info').innerHTML =
+  `Navegador: <b>${sam ? 'Samsung Internet ' + sam[1] : chr ? 'Chrome ' + chr[1] : 'outro'}</b><br>
+   AR pelo navegador (WebXR): ${yes(xr)}<br>
+   Android: ${yes(/Android/.test(ua))}`;
+if (location.hash.includes('no-ar-fallback')) log('Voltou do Google sem abrir a AR (falhou).');
+mv.addEventListener('ar-status', e => log('Status: ' + e.detail.status));
+const go = (mode, nome) => {
+  log('— ' + nome);
+  mv.setAttribute('ar-modes', mode);
+  const run = () => setTimeout(() => mv.canActivateAR ? mv.activateAR() : log('Este modo não está disponível neste celular.'), 100);
+  mv.loaded ? run() : mv.addEventListener('load', run, { once: true });
+};
+document.getElementById('t1').onclick = () => go('webxr', 'Teste 1 (navegador)');
+document.getElementById('t2').onclick = () => go('scene-viewer', 'Teste 2 (app Google)');
+</script>
+</body>
+</html>
