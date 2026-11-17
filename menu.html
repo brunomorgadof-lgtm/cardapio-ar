@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cardápio</title>
 <meta name="theme-color" content="#faf7f2">
-<link rel="stylesheet" href="style.css?v=1794959011">
-<script type="module" src="vendor/model-viewer.min.js"></script>
-<script src="data.js?v=1794959011"></script>
+<link rel="stylesheet" href="style.css?v=1794959497">
+<script type="module" src="vendor/model-viewer.min.js?v=1794959497"></script>
+<script src="data.js?v=1794959497"></script>
 </head>
 <body>
 <main class="wrap" id="app"></main>
@@ -123,6 +123,8 @@ document.querySelectorAll('.dish').forEach(card => {
 var pendingCard = null;
 const FORCE_CAM = new URLSearchParams(location.search).has('camera');
 const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+// Cardápio: depois que o prato pousa na mesa, o dedo não arrasta nem muda o tamanho (vendor/model-viewer.min.js lê isto)
+window.AR_TRAVADO = true;
 const cam = document.getElementById('cam'), video = document.getElementById('camvideo'), cammv = document.getElementById('cammv');
 let stream = null;
 async function openCam() {
