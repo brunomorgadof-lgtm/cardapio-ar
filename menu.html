@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cardápio</title>
 <meta name="theme-color" content="#faf7f2">
-<link rel="stylesheet" href="style.css?v=1794958779">
+<link rel="stylesheet" href="style.css?v=1794959011">
 <script type="module" src="vendor/model-viewer.min.js"></script>
-<script src="data.js?v=1794958779"></script>
+<script src="data.js?v=1794959011"></script>
 </head>
 <body>
 <main class="wrap" id="app"></main>
@@ -101,8 +101,10 @@ document.querySelectorAll('.dish').forEach(card => {
   const openAR = () => {
     pendingCard = { mv, nome: label };
     if (!isMobile) return document.getElementById('desk').showModal();
+    // Guarda o prato: se o Android falhar, ele recarrega a página e precisamos saber qual era
+    try { sessionStorage.setItem('arPend', JSON.stringify({ i: card.dataset.i, nome: label, scale: mv.scale || '' })); } catch (e) {}
     if (mv.canActivateAR) mv.activateAR();
-    else openCam(); // último recurso: celular sem AR nativa
+    else openCam(); // celular sem AR: mostra o prato em tela cheia
   };
   arBtn.addEventListener('click', () => {
     if (mv.loaded) return openAR();
@@ -111,6 +113,7 @@ document.querySelectorAll('.dish').forEach(card => {
   });
   mv.addEventListener('ar-status', e => {
     if (e.detail.status === 'failed') isMobile ? openCam() : document.getElementById('desk').showModal();
+    if (e.detail.status === 'session-started') { try { sessionStorage.removeItem('arPend'); } catch (e) {} }
   });
 });
 
@@ -134,13 +137,10 @@ async function openCam() {
   cammv.src = src.src; cammv.scale = src.scale || '1 1 1';
   document.getElementById('camname').textContent = pendingCard.nome;
   cam.hidden = false; document.body.style.overflow = 'hidden';
-  try {
-    stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } }, audio: false });
-    video.srcObject = stream; await video.play().catch(() => {});
-  } catch (err) {
-    document.getElementById('camhint').textContent = 'Sem acesso à câmera. Você ainda pode girar o prato e aproximar com os dedos.';
-    cam.classList.add('nocam');
-  }
+  // Sem câmera e sem mensagem de erro: o cliente só vê o prato grande para girar e aproximar.
+  cam.classList.add('nocam');
+  document.getElementById('camhint').textContent = 'Arraste para girar o prato e use dois dedos para aproximar.';
+  try { sessionStorage.removeItem('arPend'); } catch (e) {}
 }
 function closeCam() {
   cam.hidden = true; document.body.style.overflow = '';
@@ -149,7 +149,22 @@ function closeCam() {
 }
 document.getElementById('camclose').addEventListener('click', closeCam);
 // O Scene Viewer volta para a página com este hash quando não consegue abrir.
-addEventListener('hashchange', () => { if (location.hash === '#model-viewer-no-ar-fallback') setTimeout(openCam, 50); });
+// Quando a AR do Android falha, ele volta para a página com este hash (às vezes recarregando
+// a página inteira). Reabrimos o prato que o cliente escolheu, em tela cheia, sem mensagem de erro.
+function arFallback() {
+  if (!location.hash.includes('no-ar-fallback')) return;
+  history.replaceState(null, '', location.pathname + location.search);
+  if (!pendingCard) {
+    let p = null; try { p = JSON.parse(sessionStorage.getItem('arPend')); } catch (e) {}
+    const card = p && document.querySelector(`.dish[data-i="${p.i}"]`); if (!card) return;
+    const mv = card.querySelector('model-viewer'); if (p.scale) mv.scale = p.scale;
+    card.scrollIntoView({ block: 'center' });
+    pendingCard = { mv, nome: p.nome };
+  }
+  setTimeout(openCam, 50);
+}
+addEventListener('hashchange', arFallback);
+arFallback();
 </script>
 </body>
 </html>
