@@ -21,6 +21,7 @@
 <script>
 const g = document.getElementById('grid');
 for (const [k, R] of Object.entries(RESTAURANTES)) {
+  if (R.oculto) continue; // fora da vitrine da demo
   const p = R.pratos.find(x => x.destaque) || R.pratos[0];
   g.insertAdjacentHTML('beforeend', `
   <div class="card" style="--c:${R.cor}">

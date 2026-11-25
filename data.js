@@ -4,6 +4,7 @@ window.WHATSAPP = ''; // ex.: '5511999999999' (vazio = botão de pedido escondid
 window.RESTAURANTES = {
   japonesa: {
     nome: 'Sakura Sushi Bar',
+    oculto: true, // escondido da página inicial (apresentava erros); apague esta linha para voltar
     culinaria: 'Japonesa',
     slogan: 'Peixe fresco, corte na hora',
     cor: '#d6455d',
