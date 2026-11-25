@@ -62,7 +62,7 @@ app.innerHTML = `
       <span class="rot">↻ arraste para girar</span>
     </div>
     <div class="body">
-      <div class="row"><h2>${p.nome}</h2><span class="price">${brl(p.preco)}</span></div>
+      <div class="row"><h2>${p.nome}</h2>${p.preco ? `<span class="price">${brl(p.preco)}</span>` : ''}</div>
       <p class="desc">${p.desc}</p>
       ${p.credito ? `<p class="credit">Modelo 3D: <a href="${p.credito.link}" target="_blank" rel="noopener">${p.credito.titulo}</a> por ${p.credito.autor} · ${p.credito.licenca}</p>` : ''}
       ${p.tamanhos ? `<div class="sizes" role="group" aria-label="Tamanho">${p.tamanhos.map((t, j) =>
@@ -81,7 +81,7 @@ document.querySelectorAll('.dish').forEach(card => {
   const priceEl = card.querySelector('.price');
   const wa = card.querySelector('.wa');
   let label = p.nome, price = p.preco;
-  const setWa = () => wa && (wa.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Olá! Quero pedir: ${label} (${brl(price)})`)}`);
+  const setWa = () => wa && (wa.href = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(`Olá! Quero pedir: ${label}${price ? ` (${brl(price)})` : ''}`)}`);
   setWa();
 
   card.querySelectorAll('.sizes button').forEach(b => b.addEventListener('click', () => {
@@ -89,7 +89,7 @@ document.querySelectorAll('.dish').forEach(card => {
     card.querySelectorAll('.sizes button').forEach(x => x.setAttribute('aria-pressed', x === b));
     mv.scale = `${t.escala} ${t.escala} ${t.escala}`;
     price = t.preco; label = `${p.nome} ${t.rotulo}`;
-    priceEl.textContent = brl(price); setWa();
+    if (priceEl) priceEl.textContent = brl(price); setWa();
   }));
   // Começa no tamanho marcado
   const sel = card.querySelector('.sizes [aria-pressed="true"]'); if (sel) sel.click();
