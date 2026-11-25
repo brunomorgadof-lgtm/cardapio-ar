@@ -76,4 +76,17 @@ window.RESTAURANTES = {
       // { id: 'combo-burger', nome: 'Combo Brasa', preco: 42.9, desc: 'Clássico da Brasa, batata frita e refrigerante.' },
     ],
   },
+  elpadre: {
+    nome: 'El Padre',
+    oculto: true, // cliente em negociação: fora da vitrine, abre só pelo QR / link direto (menu.html?r=elpadre)
+    culinaria: 'Hamburgueria',
+    slogan: 'Hambúrguer artesanal',
+    cor: '#b3261e',
+    emoji: '🍔',
+    pratos: [
+      // Modelo 3D aproximado, reconstruído a partir das fotos do lanche (tools/foto3d). Preço: falta confirmar com o restaurante.
+      { id: 'el-padre-burger', nome: 'Burger El Padre', preco: null,
+        desc: 'Pão brioche, blend grelhado, cheddar, bacon caramelizado, onion ring, folhas verdes e maionese verde.' },
+    ],
+  },
 };
