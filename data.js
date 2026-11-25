@@ -84,8 +84,8 @@ window.RESTAURANTES = {
     cor: '#b3261e',
     emoji: '🍔',
     pratos: [
-      // Modelo 3D aproximado, reconstruído a partir das fotos do lanche (tools/foto3d). Preço: falta confirmar com o restaurante.
-      { id: 'el-padre-burger', nome: 'Burger El Padre', preco: null,
+      // Modelo 3D gerado por IA (TRELLIS) a partir da foto do lanche e pintado com as fotos reais (tools/foto3d). Preço: falta confirmar com o restaurante.
+      { id: 'el-padre-burger-ia', nome: 'Burger El Padre', preco: null, orbita: '20deg 68deg 0.5m', // câmera um pouco mais longe para o lanche aparecer inteiro
         desc: 'Pão brioche, blend grelhado, cheddar, bacon caramelizado, onion ring, folhas verdes e maionese verde.' },
     ],
   },
