@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Cardápio</title>
 <meta name="theme-color" content="#faf7f2">
-<link rel="stylesheet" href="style.css?v=1795000000">
-<script type="module" src="vendor/model-viewer.min.js?v=1795000000"></script>
-<script src="data.js?v=1795000000"></script>
+<link rel="stylesheet" href="style.css?v=1795100000">
+<script type="module" src="vendor/model-viewer.min.js?v=1795100000"></script>
+<script src="data.js?v=1795100000"></script>
 </head>
 <body>
 <main class="wrap" id="app"></main>
@@ -54,7 +54,7 @@ app.innerHTML = `
       <model-viewer src="models/${p.id}.glb" alt="${p.nome} em 3D"
         ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor"
         camera-controls touch-action="pan-y" auto-rotate auto-rotate-delay="0" rotation-per-second="20deg"
-        camera-orbit="30deg 62deg auto" shadow-intensity="1" shadow-softness="0.8"
+        camera-orbit="${p.orbita || '30deg 62deg auto'}" min-camera-orbit="auto auto ${p.orbita ? '0.22m' : 'auto'}" shadow-intensity="1" shadow-softness="0.8"
         environment-image="neutral" exposure="1.05" interaction-prompt="none" ${i > 0 ? 'loading="lazy"' : 'loading="eager"'}>
         <button slot="ar-button" hidden></button>
       </model-viewer>
